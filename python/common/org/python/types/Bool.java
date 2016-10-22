@@ -205,16 +205,18 @@ public class Bool extends org.python.types.Object {
         } else if (other instanceof org.python.types.Float) {
             return new org.python.types.Float( (((org.python.types.Bool) this).value ? 1.0 : 0.0)*(((org.python.types.Float) other).value));
         } else if (other instanceof org.python.types.Str) {
-            if(((org.python.types.Bool) this).value){
+            if (((org.python.types.Bool) this).value) {
                 return new org.python.types.Str(((org.python.types.Str) other).value);
-            }
-            else{
+            } else {
                 return new org.python.types.Str("");
-
             }
         } else if (other instanceof org.python.types.List) {
             return other.__mul__(this);
         } else if (other instanceof org.python.types.Tuple) {
+            return other.__mul__(this);
+        } else if (other instanceof org.python.types.ByteArray) {
+            return other.__mul__(this);
+        } else if (other instanceof org.python.types.Bytes) {
             return other.__mul__(this);
         }
         throw new org.python.exceptions.TypeError("unsupported operand type(s) for *: 'bool' and '" + other.typeName() + "'");
@@ -338,8 +340,19 @@ public class Bool extends org.python.types.Object {
     )
     public org.python.Object __and__(org.python.Object other) {
         if (other instanceof org.python.types.Bool) {
-            return new org.python.types.Bool( (((org.python.types.Bool) this).value ? 1 : 0) & (((org.python.types.Bool) other).value ? 1 : 0));
+            return new org.python.types.Bool(
+                (((org.python.types.Bool) this).value ? 1 : 0) &
+                (((org.python.types.Bool) other).value ? 1 : 0)
+            );
         }
+
+        if (other instanceof org.python.types.Int) {
+            return new org.python.types.Int(
+                (((org.python.types.Bool) this).value ? 1 : 0) &
+                ((org.python.types.Int) other).value
+            );
+        }
+
         throw new org.python.exceptions.TypeError("unsupported operand type(s) for &: 'bool' and '" + other.typeName() + "'");
     }
 
